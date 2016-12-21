@@ -4,7 +4,8 @@
   "description": "client library for zeitadmin time tracker",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "watch": "watch 'npm test' -d -u --ignoreDirectoryPattern='/node_modules/g'",
+    "test": "JASMINE_CONFIG_PATH=jasmine.config.json jasmine-ts"
   },
   "repository": {
     "type": "git",
@@ -26,8 +27,8 @@
   },
   "homepage": "https://github.com/Xiphe/zeitadmin-client#readme",
   "devDependencies": {
-    "eslint": "3.12.2",
-    "eslint-config-airbnb-base": "11.0.0",
-    "eslint-plugin-import": "2.2.0"
+    "jasmine-ts": "0.0.3",
+    "typescript": "2.1.4",
+    "watch": "1.0.1"
   }
 }
