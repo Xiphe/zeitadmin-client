@@ -1,0 +1,33 @@
+{
+  "name": "zeitadmin-client",
+  "version": "0.0.0",
+  "description": "client library for zeitadmin time tracker",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/Xiphe/zeitadmin-client.git"
+  },
+  "keywords": [
+    "time",
+    "management",
+    "time",
+    "tracking",
+    "github",
+    "pomodoro",
+    "sync"
+  ],
+  "author": "Hannes Diercks <zeitadmin-client@xiphe.net>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Xiphe/zeitadmin-client/issues"
+  },
+  "homepage": "https://github.com/Xiphe/zeitadmin-client#readme",
+  "devDependencies": {
+    "eslint": "3.12.2",
+    "eslint-config-airbnb-base": "11.0.0",
+    "eslint-plugin-import": "2.2.0"
+  }
+}
