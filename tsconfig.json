@@ -1,11 +1,17 @@
 {
   "include": [
-      "typings/index.d.ts",
-      "index.ts",
-      "src/**/*.ts",
-      "test/**/*.ts"
+    "typings/index.d.ts",
+    "src/**/*.ts",
+    "test/**/*.ts"
   ],
   "exclude": [
-      "node_modules"
-  ]
+    "node_modules"
+  ],
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "outDir": "./dist"
+  }
 }

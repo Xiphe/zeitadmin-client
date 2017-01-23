@@ -6,7 +6,8 @@
   "scripts": {
     "watch": "watch 'npm test' -d -u --ignoreDirectoryPattern='/node_modules/g'",
     "test": "JASMINE_CONFIG_PATH=jasmine.config.json ts-node $(npm bin)/jasmine",
-    "cover": "JASMINE_CONFIG_PATH=jasmine.config.json nyc $(npm bin)/jasmine"
+    "cover": "JASMINE_CONFIG_PATH=jasmine.config.json nyc $(npm bin)/jasmine",
+    "compile": "rm -rf dist && tsc --p tsconfig.json"
   },
   "repository": {
     "type": "git",
