@@ -31,6 +31,8 @@
   "devDependencies": {
     "jasmine": "2.5.3",
     "nyc": "10.1.2",
+    "pouchdb": "6.1.1",
+    "pouchdb-adapter-memory": "6.1.1",
     "ts-node": "2.0.0",
     "typescript": "2.1.4",
     "watch": "1.0.1"

@@ -2,26 +2,28 @@ import ZeitadminClient from '../src/ZeitadminClient';
 import errorMatching from './helpers/errorMatching';
 import date from '../src/acl/date';
 import uuid from '../src/acl/uuid';
+import * as PouchDB from 'pouchdb';
+import * as MemodyAdapter from 'pouchdb-adapter-memory';
+
+PouchDB.plugin(MemodyAdapter);
 
 const ONE_SECOND = 1000;
 const VALID_ISSUE_URL = 'Xiphe/zeitadmin-client#1';
 
 describe('client.start', () => {
   let client: ZeitadminClient = null;
-  let fakeDb = null;
+  let db = null;
   let validConfig = null;
 
   beforeEach(() => {
-    fakeDb = jasmine.createSpyObj('db', ['get', 'put']);
-
-    fakeDb.put.and.callFake((doc, cb) => { cb(null, {}) });
+    db = new PouchDB('testDb', {adapter: 'memory'});
 
     validConfig = {
       duration: ONE_SECOND + 1,
     };
 
     client = new ZeitadminClient({
-      db: fakeDb,
+      db,
       token: 'foo',
     });
   });
@@ -76,7 +78,7 @@ describe('client.start', () => {
 
     it('fails when zeit can not be written to db', (done) => {
       const someError = new Error();
-      fakeDb.put.and.callFake((doc, cb) => { cb(someError, {}) });
+      spyOn(db, 'put').and.callFake((opts, cb) => { cb(someError); });
 
       client
         .start(VALID_ISSUE_URL, validConfig)
@@ -90,8 +92,10 @@ describe('client.start', () => {
 
     it('puts a new zeit into db', (done) => {
       client.start(VALID_ISSUE_URL, validConfig)
-        .then(() => {
-          expect(fakeDb.put).toHaveBeenCalledWith(jasmine.objectContaining({
+        .then(() => db.allDocs({include_docs: true}))
+        .then((allDocs) => {
+          expect(allDocs.total_rows).toBe(1);
+          expect(allDocs.rows[0].doc).toEqual(jasmine.objectContaining({
             _id: fakeId,
             issue: {
               owner: 'Xiphe',
@@ -101,8 +105,7 @@ describe('client.start', () => {
             duration: validConfig.duration,
             start: fakeTime,
             end: fakeTime + 1001,
-          }), jasmine.any(Function));
-
+          }));
           done();
         }, () => done.fail('unexpected failure'));
     });
