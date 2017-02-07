@@ -1,7 +1,8 @@
 import IZeit from './IZeit';
 
 interface IState {
-  zeit: Array<IZeit>
+  zeit: Array<IZeit>,
+  time: Number
 }
 
 export default IState;
