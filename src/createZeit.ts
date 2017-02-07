@@ -1,9 +1,9 @@
-import ZeitInterface from './interfaces/ZeitInterface';
-import ZeitConfigInterface from './interfaces/ZeitConfigInterface';
+import IZeit from './interfaces/IZeit';
+import IZeitConfig from './interfaces/IZeitConfig';
 import uuid from './acl/uuid';
 import date from './acl/date';
 
-export default function createZeit({ issue, duration }: ZeitConfigInterface): ZeitInterface {
+export default function createZeit({ issue, duration }: IZeitConfig): IZeit {
   if (typeof duration !== 'number' || duration <= 1000) {
     throw new Error(`Can not create zeit with duration of ${duration}`);
   }

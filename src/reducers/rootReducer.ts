@@ -1,12 +1,12 @@
-import StateInterface from '../interfaces/StateInterface';
+import IState from '../interfaces/IState';
 import { Action } from 'redux';
 import { DELETE_ZEIT, INSERT_ZEIT, UPDATE_ZEIT } from '../actions';
 
-const initialState: StateInterface = {
+const initialState: IState = {
   zeit: []
 };
 
-export default (state: StateInterface = initialState, action): StateInterface => {
+export default (state: IState = initialState, action): IState => {
   switch (action.type) {
     case INSERT_ZEIT:
       return {

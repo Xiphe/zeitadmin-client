@@ -1,20 +1,20 @@
-import StateInterface from './interfaces/StateInterface';
-import ZeitDatabaseInterface from './interfaces/ZeitDatabaseInterface';
-import PouchDbErrorHandlerInterface from './interfaces/PouchDbErrorHandlerInterface';
+import IState from './interfaces/IState';
+import IZeitDatabase from './interfaces/IZeitDatabase';
+import IPouchDbErrorHandler from './interfaces/IPouchDbErrorHandler';
 import * as PouchMiddleware from 'pouch-redux-middleware';
 import { DELETE_ZEIT, INSERT_ZEIT, UPDATE_ZEIT } from './actions';
 import { createStore, applyMiddleware, Store } from 'redux';
 import rootReducer from './reducers';
 import PouchDB from 'pouchdb';
 
-const noopErrorHandler: PouchDbErrorHandlerInterface = (error, data, callback) => {
+const noopErrorHandler: IPouchDbErrorHandler = (error, data, callback) => {
   callback(error);
 }
 
 export default function configureStore(
-  db: ZeitDatabaseInterface,
-  errorHandler: PouchDbErrorHandlerInterface = noopErrorHandler
-): Store<StateInterface> {
+  db: IZeitDatabase,
+  errorHandler: IPouchDbErrorHandler = noopErrorHandler
+): Store<IState> {
   const pouchMiddleware = new PouchMiddleware({
     path: '/zeit',
     db,

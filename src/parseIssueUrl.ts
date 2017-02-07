@@ -1,4 +1,4 @@
-import IssueInterface from './interfaces/IssueInterface';
+import IIssue from './interfaces/IIssue';
 
 function stripGithub(issueUrl: string): string {
   const match = issueUrl.match(/github\.com\/(.*)/);
@@ -14,7 +14,7 @@ function normalize(issue) {
   return issue.replace(/\/(issues|pull)\//, '#');
 }
 
-export default function parseIssueUrl(issueUrl: string): IssueInterface {
+export default function parseIssueUrl(issueUrl: string): IIssue {
   const tokens = normalize(stripGithub(issueUrl)).split('/');
   const errStr = `Could not parse issue "${issueUrl}", please use github url or owner/repo#1 formart`;
 
