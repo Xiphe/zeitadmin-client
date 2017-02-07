@@ -28,7 +28,7 @@ describe('client.start', () => {
     });
   });
 
-  it('throws when called with unparsable issueUrl', (done) => {
+  it('throws when called with unparsable issueUrl', () => {
     const invalidIssueUrls = [
       'foobar',
       'Xiphe/zeitadmin-client',
@@ -38,33 +38,21 @@ describe('client.start', () => {
     ]
 
     invalidIssueUrls.forEach((invalidIssueUrl, i) => {
-      client
-        .start(invalidIssueUrl, validConfig)
-        .then(() => done.fail('unexpected success'))
-        .catch((err) => {
-          expect(err.message).toContain(`Could not parse issue "${invalidIssueUrl}"`);
-
-          if (i === invalidIssueUrls.length - 1) {
-            done();
-          }
-        });
+      expect(() => {
+        client.start(invalidIssueUrl, validConfig)
+      }).toThrow(errorMatching(`Could not parse issue "${invalidIssueUrl}"`));
     });
   });
 
-  it('fails when trying to track less than one second', (done) => {
+  it('fails when trying to track less than one second', () => {
     const invalidConfig = {
       ...validConfig,
       duration: ONE_SECOND,
     };
 
-    client
-      .start(VALID_ISSUE_URL, invalidConfig)
-      .then(() => done.fail('unexpected success'))
-      .catch((err) => {
-        expect(err.message).toContain(`Can not create zeit with duration of ${ONE_SECOND}`);
-
-        done();
-      });
+    expect(() => {
+      client.start(VALID_ISSUE_URL, invalidConfig);
+    }).toThrow(errorMatching(`Can not create zeit with duration of ${ONE_SECOND}`))
   });
 
   describe('with mocked time and uuid', () => {
@@ -76,23 +64,38 @@ describe('client.start', () => {
       spyOn(uuid, 'create').and.returnValue(fakeId);
     });
 
-    it('fails when zeit can not be written to db', (done) => {
+    it('fails when zeit can not be written to db', () => {
+      const errorHandler = jasmine.createSpy('errorHandler');
+      client = new ZeitadminClient({
+        db,
+        token: 'foo',
+        errorHandler,
+      });
       const someError = new Error();
       spyOn(db, 'put').and.callFake((opts, cb) => { cb(someError); });
 
-      client
-        .start(VALID_ISSUE_URL, validConfig)
-        .then(() => done.fail('unexpected success'))
-        .catch((err) => {
-          expect(err.message).toContain(`unable to start zeit`);
+      client.start(VALID_ISSUE_URL, validConfig);
 
-          done();
-        });
+      expect(errorHandler).toHaveBeenCalledWith(
+        someError,
+        jasmine.objectContaining({
+          doc: jasmine.objectContaining({
+            _id: jasmine.any(String),
+            issue: {
+              owner: 'Xiphe',
+              repo: 'zeitadmin-client',
+              number: '1',
+            }
+          })
+        }),
+        jasmine.any(Function)
+      );
     });
 
     it('puts a new zeit into db', (done) => {
-      client.start(VALID_ISSUE_URL, validConfig)
-        .then(() => db.allDocs({include_docs: true}))
+      client.start(VALID_ISSUE_URL, validConfig);
+
+      db.allDocs({include_docs: true})
         .then((allDocs) => {
           expect(allDocs.total_rows).toBe(1);
           expect(allDocs.rows[0].doc).toEqual(jasmine.objectContaining({
@@ -107,7 +110,8 @@ describe('client.start', () => {
             end: fakeTime + 1001,
           }));
           done();
-        }, () => done.fail('unexpected failure'));
+        })
+        .catch(() => done.fail('unexpected failure'));
     });
   });
 });
