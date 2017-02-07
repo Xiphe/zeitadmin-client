@@ -7,13 +7,19 @@ PouchDB.plugin(MemodyAdapter);
 describe('client.subscribe', () => {
   let client: ZeitadminClient = null;
   let db = null;
+  let i = 0;
 
   beforeEach(() => {
-    db = new PouchDB('testDb', {adapter: 'memory'});
+    db = new PouchDB(`client.subscribe.${i++}`, {adapter: 'memory'});
 
     client = new ZeitadminClient({
       db,
       token: 'foo',
+      errorHandler(err) {
+        if (err) {
+          fail(err);
+        }
+      },
     });
   });
 

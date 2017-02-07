@@ -14,9 +14,10 @@ describe('client.start', () => {
   let client: ZeitadminClient = null;
   let db = null;
   let validConfig = null;
+  let i = 0;
 
   beforeEach(() => {
-    db = new PouchDB('testDb', {adapter: 'memory'});
+    db = new PouchDB(`client.start${i++}`, {adapter: 'memory'});
 
     validConfig = {
       duration: ONE_SECOND + 1,
@@ -25,6 +26,11 @@ describe('client.start', () => {
     client = new ZeitadminClient({
       db,
       token: 'foo',
+      errorHandler(err) {
+        if (err) {
+          fail(err);
+        }
+      },
     });
   });
 
