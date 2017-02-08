@@ -1,4 +1,4 @@
-import IIssue from './interfaces/IIssue';
+import IIssue from '../interfaces/IIssue';
 
 function stripGithub(issueUrl: string): string {
   const match = issueUrl.match(/github\.com\/(.*)/);

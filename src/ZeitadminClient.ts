@@ -2,10 +2,10 @@ import { Store } from 'redux';
 import IZeitDatabase from './interfaces/IZeitDatabase';
 import IZeitadminClientConfig from './interfaces/IZeitadminClientConfig';
 import IState from './interfaces/IState';
-import parseIssueUrl from './parseIssueUrl';
-import configureStore from './configureStore';
+import parseIssueUrl from './lib/parseIssueUrl';
+import configureStore from './lib/configureStore';
 import { insertZeit, setTime } from './actions';
-import createZeit from './createZeit';
+import createZeit from './lib/createZeit';
 import date from './acl/date';
 
 interface ISubscription {

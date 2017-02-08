@@ -1,11 +1,12 @@
-import IState from './interfaces/IState';
-import IZeitDatabase from './interfaces/IZeitDatabase';
-import IPouchDbErrorHandler from './interfaces/IPouchDbErrorHandler';
+import IState from '../interfaces/IState';
+import IZeitDatabase from '../interfaces/IZeitDatabase';
+import IPouchDbErrorHandler from '../interfaces/IPouchDbErrorHandler';
 import * as PouchMiddleware from 'pouch-redux-middleware';
-import { DELETE_ZEIT, INSERT_ZEIT, UPDATE_ZEIT } from './actions';
+import { DELETE_ZEIT, INSERT_ZEIT, UPDATE_ZEIT } from '../actions';
 import { createStore, applyMiddleware, Store } from 'redux';
-import rootReducer from './reducers';
+import rootReducer from '../reducers';
 import PouchDB from 'pouchdb';
+
 
 export default function configureStore(
   db: IZeitDatabase,

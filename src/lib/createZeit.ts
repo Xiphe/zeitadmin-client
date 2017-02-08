@@ -1,7 +1,7 @@
-import IZeit from './interfaces/IZeit';
-import IZeitConfig from './interfaces/IZeitConfig';
-import uuid from './acl/uuid';
-import date from './acl/date';
+import IZeit from '../interfaces/IZeit';
+import IZeitConfig from '../interfaces/IZeitConfig';
+import uuid from '../acl/uuid';
+import date from '../acl/date';
 
 export default function createZeit({ issue, duration }: IZeitConfig): IZeit {
   if (typeof duration !== 'number' || duration <= 1000) {
