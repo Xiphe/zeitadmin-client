@@ -1,17 +1,24 @@
 import IState from '../interfaces/IState';
 import IZeitDatabase from '../interfaces/IZeitDatabase';
 import IPouchDbErrorHandler from '../interfaces/IPouchDbErrorHandler';
+import IConfigureStoreResponse from '../interfaces/IConfigureStoreResponse';
 import * as PouchMiddleware from 'pouch-redux-middleware';
 import { DELETE_ZEIT, INSERT_ZEIT, UPDATE_ZEIT } from '../actions';
 import { createStore, applyMiddleware, Store } from 'redux';
 import rootReducer from '../reducers';
 import PouchDB from 'pouchdb';
 
-
 export default function configureStore(
   db: IZeitDatabase,
   errorHandler: IPouchDbErrorHandler
-): Store<IState> {
+): IConfigureStoreResponse {
+  let resolve = null;
+  let reject = null;
+  const initiated = new Promise((r, j) => {
+    resolve = r;
+    reject = j;
+  });
+
   const pouchMiddleware = new PouchMiddleware({
     path: '/zeit',
     db,
@@ -20,7 +27,14 @@ export default function configureStore(
       insert: doc => { return { type: INSERT_ZEIT, zeit: doc } },
       update: doc => { return { type: UPDATE_ZEIT, zeit: doc } },
     },
-    handleResponse: errorHandler
+    handleResponse: errorHandler,
+    initialBatchDispatched(err) {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    }
   });
 
   const store = createStore(
@@ -29,5 +43,8 @@ export default function configureStore(
     applyMiddleware(pouchMiddleware)
   );
 
-  return store;
+  return {
+    store,
+    initiated,
+  };
 };

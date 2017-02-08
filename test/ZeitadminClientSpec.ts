@@ -129,8 +129,6 @@ describe('ZeitadminClient', () => {
         expect(state.zeit.length).toBe(0);
         done();
       });
-
-      client.store.dispatch({ type: 'FOO' });
     });
   });
 });

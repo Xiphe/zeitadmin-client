@@ -16,12 +16,15 @@ export default class ZeitadminClient {
   db: IZeitDatabase;
   token: string;
   store: Store<IState>;
+  storeInitiated: Promise<any>;
   subscriptions: Array<ISubscription>;
   cancelSubscriptions: Function;
   constructor({ db, token, errorHandler }: IZeitadminClientConfig) {
     this.db = db;
     this.token = token;
-    this.store = configureStore(db, errorHandler);
+    const { store, initiated } = configureStore(db, errorHandler);
+    this.store = store;
+    this.storeInitiated = initiated;
     this.subscriptions = [];
   }
   start(issueUrl: string, { duration }) {
@@ -34,7 +37,7 @@ export default class ZeitadminClient {
     this.subscriptions.push(subscription);
 
     if (this.subscriptions.length === 1) {
-      setTimeout(() => {
+      this.storeInitiated.then(() => {
         if (!this.subscriptions.length) {
           return;
         }
@@ -54,9 +57,7 @@ export default class ZeitadminClient {
           clearInterval(interval);
           unsubscribe();
         }
-
-      /* We don't want all the initial setup spam */
-      }, 100);
+      });
     }
 
     return () => {
