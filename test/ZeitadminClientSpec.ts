@@ -1,4 +1,5 @@
 import ZeitadminClient from '../src';
+import { cancelAllSubscriptions } from '../src/ZeitadminClient';
 import errorMatching from './helpers/errorMatching';
 import date from '../src/acl/date';
 import uuid from '../src/acl/uuid';
@@ -32,6 +33,10 @@ describe('ZeitadminClient', () => {
         }
       },
     });
+  });
+
+  afterEach(() => {
+    cancelAllSubscriptions();
   });
 
   describe('#start', () => {

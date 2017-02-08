@@ -12,6 +12,12 @@ interface ISubscription {
   (state: IState): void
 }
 
+const allSubscriptionCancels = [];
+
+export function cancelAllSubscriptions() {
+  allSubscriptionCancels.forEach((cancel) => cancel());
+}
+
 export default class ZeitadminClient {
   db: IZeitDatabase;
   token: string;
@@ -61,7 +67,12 @@ export default class ZeitadminClient {
       });
     }
 
-    return () => {
+    let canceled = false;
+    const cancel = () => {
+      if (canceled) {
+        return;
+      }
+      canceled = true;
       this.subscriptions.splice(this.subscriptions.indexOf(subscription), 1);
 
       if (this.subscriptions.length === 0) {
@@ -69,5 +80,8 @@ export default class ZeitadminClient {
         this.cancelSubscriptions = null;
       }
     };
+    allSubscriptionCancels.push(cancel);
+
+    return cancel;
   }
 }
