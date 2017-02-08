@@ -7,13 +7,9 @@ import { createStore, applyMiddleware, Store } from 'redux';
 import rootReducer from './reducers';
 import PouchDB from 'pouchdb';
 
-const noopErrorHandler: IPouchDbErrorHandler = (error, data, callback) => {
-  callback(error);
-}
-
 export default function configureStore(
   db: IZeitDatabase,
-  errorHandler: IPouchDbErrorHandler = noopErrorHandler
+  errorHandler: IPouchDbErrorHandler
 ): Store<IState> {
   const pouchMiddleware = new PouchMiddleware({
     path: '/zeit',
