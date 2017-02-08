@@ -49,8 +49,9 @@ export default class ZeitadminClient {
           });
         });
 
+        this.store.dispatch(setTime(date.getTime()));
         const interval = setInterval(() => {
-          this.store.dispatch(setTime(date.getTime()))
+          this.store.dispatch(setTime(date.getTime()));
         }, 1000);
 
         this.cancelSubscriptions = () => {
